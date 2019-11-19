@@ -14,7 +14,7 @@ function! s:eitaro_on_cursor_hold()
     return
   endif
 
-  call eitaro#lookup_selected('n')
+  call eitaro#lookup_selected('n', g:eitaro_inside)
 endfunction
 
 let s:eitaro_window = 0
