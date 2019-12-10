@@ -36,7 +36,7 @@ function! eitaro#lookup(word, inside)
     call s:show_in_popup(l:defs)
   else
     let l:encoded = EncodeURIComponent(a:word)
-    silent! call system('curl --silent http://localhost:8116/word/' . l:encoded)
+    silent! call job_start('curl --silent http://localhost:8116/word/' . l:encoded)
   endif
 endfunction
 
