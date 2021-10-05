@@ -32,7 +32,7 @@ endfunction
 
 function! eitaro#lookup(word, inside)
   if a:inside
-    let l:defs = systemlist('eitaro lookup --no-color ' . shellescape(a:word))
+    let l:defs = systemlist('eitaro lookup --no-color --no-correction ' . shellescape(a:word))
     call s:show_in_popup(l:defs)
   else
     let l:encoded = EncodeURIComponent(a:word)
