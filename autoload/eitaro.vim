@@ -1,12 +1,11 @@
 
-let s:V = vital#of('eitaro')
-let s:VimBuffer = s:V.import('Vim.Buffer')
-let s:WebURI = s:V.import('Web.URI')
-
-
 let s:eitaro_enabled = 0
 let s:eitaro_prevent_cursor_hold = 0
 
+function! s:EncodeURIComponent(s)
+  return substitute(a:s, '[^0-9A-Za-z-._~!''()*]',
+        \ '\=s:char2hex(submatch(0))', 'g')
+endfunction
 
 function! s:eitaro_on_cursor_hold()
   if s:eitaro_prevent_cursor_hold
@@ -30,12 +29,26 @@ function! s:show_in_popup(lines)
     " \   'border': [1, 1, 1, 1],
 endfunction
 
+function! s:show_in_echo(lines)
+  for l:line in a:lines
+    echomsg l:line
+  endfor
+endfunction
+
+function! s:show(lines)
+  if has('popupwin')
+    call s:show_in_popup(a:lines)
+  else
+    call s:show_in_echo(a:lines)
+  endif
+endfunction
+
 function! eitaro#lookup(word, inside)
   if a:inside
     let l:defs = systemlist('eitaro lookup --no-color --no-correction ' . shellescape(a:word))
-    call s:show_in_popup(l:defs)
+    call s:show(l:defs)
   else
-    let l:encoded = EncodeURIComponent(a:word)
+    let l:encoded = s:EncodeURIComponent(a:word)
     silent! call job_start('curl --silent http://localhost:8116/word/' . l:encoded)
   endif
 endfunction
